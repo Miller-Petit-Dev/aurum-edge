@@ -1,4 +1,4 @@
-# AURUM-EDGE v2
+![Banner](./assets/aurum-edge-banner1.jpeg)
 
 **Motor de decisión ML para trading cuantitativo con validación walk-forward y risk management**
 
