@@ -1,0 +1,61 @@
+# ===============================================
+# LABELING: Triple Barrier
+# ===============================================
+# Método: Se fija un TP (take profit), SL (stop loss) y horizonte temporal.
+# El label se asigna según cuál barrera se toca primero.
+
+method: "triple_barrier"
+
+# -----------------------------------------------
+# BARRIER PARAMETERS
+# -----------------------------------------------
+barriers:
+  # Take Profit: múltiplo de ATR
+  tp_multiplier: 2.0
+  
+  # Stop Loss: múltiplo de ATR
+  sl_multiplier: 1.0
+  
+  # Time barrier: máximo de barras antes de forzar cierre
+  time_bars: 12  # En M5: 12 barras = 60 minutos = 1 hora
+  
+  # ATR period para calcular barreras dinámicas
+  atr_period: 14
+
+# -----------------------------------------------
+# LABEL MAPPING
+# -----------------------------------------------
+labels:
+  # Qué hacer cuando toca cada barrera
+  tp_label: 1      # Take profit → LONG (comprar)
+  sl_label: 0      # Stop loss → SHORT (vender) o no trade
+  time_label: -1   # Time expiry → NEUTRAL (no trade)
+  
+  # En MVP: neutrals se eliminan (drop)
+  handle_neutrals: "drop"  # drop, keep, or balance
+
+# -----------------------------------------------
+# ADVANCED (no tocar en MVP)
+# -----------------------------------------------
+advanced:
+  # Adaptive barriers (fase 2)
+  adaptive_barriers: false
+  
+  # Meta-labeling (fase 2)
+  meta_labeling: false
+  
+  # Fractional differentiation (fase 2)
+  fractional_diff: false
+
+# -----------------------------------------------
+# VALIDATION
+# -----------------------------------------------
+validation:
+  # Mínimo % de samples por clase
+  min_class_pct: 0.05  # 5%
+  
+  # Advertir si hay mucho desbalance
+  warn_imbalance_threshold: 0.3  # 70/30
+  
+  # Verificar que labels no usan info futura
+  check_no_lookahead: true

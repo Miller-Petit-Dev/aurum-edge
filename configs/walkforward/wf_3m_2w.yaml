@@ -1,0 +1,85 @@
+# ===============================================
+# WALK-FORWARD VALIDATION
+# ===============================================
+# Strategy: train en N meses, test en M semanas, step cada S semanas
+
+name: "wf_3m_2w"
+description: "Train 3 meses, test 2 semanas, step 2 semanas"
+
+# -----------------------------------------------
+# WINDOW CONFIGURATION
+# -----------------------------------------------
+windows:
+  # Training window
+  train_months: 3
+  
+  # Test window
+  test_weeks: 2
+  
+  # Step size (overlap o no)
+  step_weeks: 2  # No overlap si step == test
+
+# -----------------------------------------------
+# PURGING & EMBARGO
+# -----------------------------------------------
+# Evitar data leakage en splits temporales
+purging:
+  enabled: true
+  # Bars a eliminar después del train set (evita correlación)
+  purge_bars: 10  # ~50 minutos en M5
+
+embargo:
+  enabled: true
+  # Bars a eliminar al inicio del test set
+  embargo_bars: 5  # ~25 minutos en M5
+
+# -----------------------------------------------
+# RETRAINING
+# -----------------------------------------------
+retraining:
+  # Re-entrenar modelo en cada fold o usar expanding window
+  mode: "rolling"  # rolling (ventana fija) o expanding (acumula data)
+  
+  # Mínimo de samples para entrenar
+  min_train_samples: 5000
+
+# -----------------------------------------------
+# METRICS TRACKING
+# -----------------------------------------------
+metrics:
+  # Métricas por fold
+  track_per_fold: true
+  
+  # Agregar métricas finales
+  aggregate_method: "weighted_average"  # Por # de trades
+  
+  # Reportar
+  save_fold_reports: true
+  save_summary_report: true
+
+# -----------------------------------------------
+# EARLY STOPPING
+# -----------------------------------------------
+early_stopping:
+  # Parar walk-forward si performance colapsa
+  enabled: false  # MVP: correr todos los folds
+  
+  # Thresholds para parar
+  max_consecutive_losing_folds: 3
+  min_fold_profit_factor: 0.8
+
+# -----------------------------------------------
+# OUTPUT
+# -----------------------------------------------
+output:
+  # Guardar predicciones de cada fold
+  save_predictions: true
+  
+  # Guardar métricas detalladas
+  save_metrics_csv: true
+  
+  # Generar markdown report
+  generate_markdown_report: true
+  
+  # Paths
+  output_dir: "reports/walkforward"

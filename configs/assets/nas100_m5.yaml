@@ -1,0 +1,101 @@
+# ===============================================
+# ASSET: NAS100 (NASDAQ 100 Index CFD)
+# TIMEFRAME: M5 (5 minutos)
+# ===============================================
+
+symbol: "NAS100"
+alternative_symbols: ["US100", "USTEC", "NAS100.cash"]
+description: "NASDAQ 100 Index CFD"
+
+timeframe:
+  name: "M5"
+  minutes: 5
+  bars_per_day: 288  # 24h * 60min / 5min
+
+# -----------------------------------------------
+# INSTRUMENT SPECS
+# -----------------------------------------------
+specs:
+  asset_class: "index_cfd"
+  currency: "USD"
+  tick_size: 0.1
+  tick_value: 0.1
+  contract_size: 1.0
+  
+  # Trading hours (UTC)
+  # NAS100 típicamente 24/5
+  trading_hours:
+    start: "22:00"  # Sunday
+    end: "21:00"    # Friday
+    
+  # Sessions (aproximado)
+  sessions:
+    asian:
+      start: "00:00"
+      end: "08:00"
+    london:
+      start: "08:00"
+      end: "16:00"
+    newyork:
+      start: "13:00"
+      end: "21:00"
+
+# -----------------------------------------------
+# COSTS (promedio de brokers retail)
+# -----------------------------------------------
+costs:
+  # Spread típico (en puntos)
+  spread_points: 2.0  # Variable según broker/horario
+  spread_usd: 0.20    # spread_points * tick_value
+  
+  # Slippage esperado (puntos)
+  slippage_points: 0.5
+  slippage_usd: 0.05
+  
+  # Commission (si aplica, muchos CFD no cobran)
+  commission_per_lot: 0.0
+  
+  # Swap (overnight financing)
+  swap_long: -0.5   # USD por lote por día
+  swap_short: -0.3
+
+# -----------------------------------------------
+# VOLATILITY CHARACTERISTICS
+# -----------------------------------------------
+volatility:
+  # ATR promedio (puntos, varía según período)
+  typical_atr_m5: 15.0
+  typical_atr_h1: 80.0
+  typical_atr_d1: 300.0
+  
+  # Volatilidad intradiaria
+  high_vol_sessions: ["london_open", "ny_open"]
+  low_vol_sessions: ["asian"]
+
+# -----------------------------------------------
+# RISK PARAMS SUGERIDOS
+# -----------------------------------------------
+risk_params:
+  # Para cuentas micro ($500-$5000)
+  min_account_size: 500
+  risk_per_trade_pct: 0.01  # 1%
+  max_risk_per_trade_pct: 0.02  # 2%
+  
+  # Position sizing
+  min_position_size: 0.01  # lotes
+  max_position_size: 1.0   # lotes (para cuenta micro)
+
+# -----------------------------------------------
+# DATA SOURCE
+# -----------------------------------------------
+data_source:
+  platform: "MT5"
+  csv_format:
+    columns: ["Date", "Time", "Open", "High", "Low", "Close", "TickVolume", "Spread"]
+    date_format: "%Y.%m.%d"
+    time_format: "%H:%M"
+    separator: ","
+    decimal: "."
+  
+  # Expected filename pattern
+  filename_pattern: "nas100_m5*.csv"

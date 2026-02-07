@@ -1,0 +1,142 @@
+# ===============================================
+# RISK MANAGEMENT: Micro Account
+# ===============================================
+# Para cuentas de $500 - $5000
+
+name: "micro_account"
+description: "Risk management para cuentas pequeñas"
+
+# -----------------------------------------------
+# ACCOUNT PARAMETERS
+# -----------------------------------------------
+account:
+  # Tamaño inicial (USD)
+  initial_balance: 1000.0
+  
+  # Currency
+  currency: "USD"
+
+# -----------------------------------------------
+# POSITION SIZING
+# -----------------------------------------------
+position_sizing:
+  # Método: fixed_pct, kelly, optimal_f, fixed_size
+  method: "fixed_pct"
+  
+  # Risk por trade (% del balance)
+  risk_per_trade_pct: 0.01  # 1%
+  max_risk_per_trade_pct: 0.02  # 2%
+  
+  # Límites de tamaño
+  min_position_size: 0.01  # lotes
+  max_position_size: 0.5   # lotes
+  
+  # Redondeo
+  round_to: 0.01  # lotes
+
+# -----------------------------------------------
+# DAILY LIMITS
+# -----------------------------------------------
+daily_limits:
+  # Máxima pérdida diaria (USD)
+  max_daily_loss: -100.0
+  
+  # Máxima ganancia diaria (stop trading after profit)
+  max_daily_profit: 300.0  # null para desactivar
+  
+  # Máximo número de trades por día
+  max_trades_per_day: 5
+  
+  # Máximo de trades consecutivos perdedores
+  max_consecutive_losses: 3
+
+# -----------------------------------------------
+# COOLDOWN PERIODS
+# -----------------------------------------------
+cooldown:
+  # Después de una pérdida
+  after_loss:
+    enabled: true
+    duration_seconds: 3600  # 1 hora
+    
+  # Después de alcanzar daily loss limit
+  after_daily_loss:
+    enabled: true
+    duration_seconds: 86400  # Resto del día
+    
+  # Después de N pérdidas consecutivas
+  after_consecutive_losses:
+    enabled: true
+    threshold: 3
+    duration_seconds: 7200  # 2 horas
+
+# -----------------------------------------------
+# KILL SWITCH
+# -----------------------------------------------
+kill_switch:
+  # Parar TODO si se alcanza
+  enabled: true
+  
+  # Máximo drawdown total (%)
+  max_drawdown: -0.20  # -20%
+  
+  # Máxima pérdida acumulada (USD)
+  max_total_loss: -200.0
+  
+  # Acción al activarse
+  action: "stop_all_trading"  # stop_all_trading, alert_only
+  
+  # Reinicio manual requerido
+  require_manual_reset: true
+
+# -----------------------------------------------
+# EXPOSURE LIMITS
+# -----------------------------------------------
+exposure:
+  # Máxima exposición total (% del balance)
+  max_total_exposure_pct: 0.10  # 10%
+  
+  # Máximo número de posiciones simultáneas
+  max_concurrent_positions: 2
+  
+  # Correlación (fase 2)
+  check_correlation: false
+
+# -----------------------------------------------
+# MARGIN & LEVERAGE
+# -----------------------------------------------
+margin:
+  # Leverage máximo permitido
+  max_leverage: 10.0
+  
+  # Margen mínimo requerido (%)
+  min_margin_level: 100.0  # 100% = no usar más del 100% del margen
+  
+  # Alerta de margen
+  margin_call_level: 50.0
+
+# -----------------------------------------------
+# MONITORING
+# -----------------------------------------------
+monitoring:
+  # Check risk limits cada N seconds
+  check_interval_seconds: 60
+  
+  # Log risk metrics
+  log_risk_metrics: true
+  
+  # Alert on limit breach
+  alert_on_breach: true
+
+# -----------------------------------------------
+# VALIDATION
+# -----------------------------------------------
+validation:
+  # Verificar antes de cada trade
+  validate_before_trade: true
+  
+  # Verificar durante el día
+  validate_continuously: true
+  
+  # Fail safe (rechazar trade si hay duda)
+  fail_safe: true

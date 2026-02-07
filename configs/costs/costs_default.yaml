@@ -1,0 +1,175 @@
+# ===============================================
+# TRADING COSTS
+# ===============================================
+# Modelo de costos para backtesting realista
+
+name: "costs_default"
+description: "Costos típicos de CFD retail"
+
+# -----------------------------------------------
+# SPREAD
+# -----------------------------------------------
+spread:
+  # Tipo: fixed, variable, time_based
+  type: "fixed"
+  
+  # Spread fijo (puntos)
+  fixed_points: 2.0
+  
+  # Spread variable (fase 2)
+  variable:
+    enabled: false
+    min_points: 1.0
+    max_points: 5.0
+    # Spread aumenta en baja liquidez
+    low_liquidity_multiplier: 2.0
+  
+  # Spread por horario (fase 2)
+  time_based:
+    enabled: false
+    asian_session: 2.5
+    london_session: 1.5
+    newyork_session: 1.0
+    overnight: 3.0
+
+# -----------------------------------------------
+# SLIPPAGE
+# -----------------------------------------------
+slippage:
+  # Modelo de slippage
+  model: "fixed"  # fixed, percentage, market_impact
+  
+  # Slippage fijo (puntos)
+  fixed_points: 0.5
+  
+  # Slippage como % del spread
+  percentage_of_spread: 0.25
+  
+  # Market impact (fase 2)
+  market_impact:
+    enabled: false
+    # Slippage aumenta con position size
+    base_bps: 0.5
+    size_multiplier: 0.1
+
+# -----------------------------------------------
+# COMMISSION
+# -----------------------------------------------
+commission:
+  # Tipo: per_trade, per_lot, percentage
+  type: "per_trade"
+  
+  # Commission por trade (USD)
+  per_trade: 0.0  # Muchos brokers CFD no cobran
+  
+  # Commission por lote (USD)
+  per_lot: 0.0
+  
+  # Commission como % del notional
+  percentage: 0.0
+  
+  # Mínimo commission
+  minimum: 0.0
+
+# -----------------------------------------------
+# SWAP (Overnight Financing)
+# -----------------------------------------------
+swap:
+  # Aplicar swap
+  enabled: true
+  
+  # Swap long (USD por lote por día)
+  long_daily: -0.5
+  
+  # Swap short (USD por lote por día)
+  short_daily: -0.3
+  
+  # Hora de aplicación (UTC)
+  rollover_hour: 22
+  
+  # Triple swap (miércoles)
+  triple_swap_day: "wednesday"
+
+# -----------------------------------------------
+# FILL RULES
+# -----------------------------------------------
+fill_rules:
+  # Modelo de fill
+  model: "realistic"  # realistic, optimistic, pessimistic
+  
+  # Realistic: entry al ask, exit al bid + slippage
+  # Optimistic: entry al mid, exit al mid (no usar)
+  # Pessimistic: peor caso siempre
+  
+  # Market orders vs Limit orders
+  market_orders:
+    fill_probability: 1.0
+    slippage_multiplier: 1.0
+  
+  limit_orders:
+    fill_probability: 0.9  # 90% de las veces se llena
+    slippage_multiplier: 0.5
+
+# -----------------------------------------------
+# LATENCY
+# -----------------------------------------------
+latency:
+  # Simular latencia de ejecución
+  enabled: true
+  
+  # Order to exchange (ms)
+  order_to_exchange: 50
+  
+  # Exchange processing (ms)
+  exchange_processing: 100
+  
+  # Fill confirmation (ms)
+  fill_confirmation: 50
+  
+  # Total esperado (ms)
+  total_expected: 200
+
+# -----------------------------------------------
+# REJECTION RATE
+# -----------------------------------------------
+rejections:
+  # Simular rechazos de órdenes
+  enabled: false  # MVP: sin rechazos
+  
+  # % de órdenes rechazadas
+  rejection_rate: 0.02  # 2%
+  
+  # Razones de rechazo
+  reasons:
+    - "insufficient_margin"
+    - "market_closed"
+    - "price_moved"
+    - "max_orders_exceeded"
+
+# -----------------------------------------------
+# COST ESTIMATION
+# -----------------------------------------------
+estimation:
+  # Calcular costo total por trade
+  calculate_total_cost: true
+  
+  # Incluir en métricas
+  include_in_metrics: true
+  
+  # Breakdown por tipo
+  cost_breakdown:
+    - "spread"
+    - "slippage"
+    - "commission"
+    - "swap"
+    - "total"
+
+# -----------------------------------------------
+# VALIDATION
+# -----------------------------------------------
+validation:
+  # Warn si costs > X% del trade P&L
+  warn_if_cost_pct: 0.5  # 50%
+  
+  # Fail si costs > threshold
+  max_cost_per_trade: 10.0  # USD

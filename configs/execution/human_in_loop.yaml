@@ -1,0 +1,161 @@
+# ===============================================
+# EXECUTION: Human-in-the-Loop
+# ===============================================
+# Todas las señales requieren aprobación manual
+
+mode: "human_in_loop"
+description: "Aprobación manual antes de ejecutar trades"
+
+# -----------------------------------------------
+# APPROVAL SETTINGS
+# -----------------------------------------------
+approval:
+  # Requiere aprobación manual
+  required: true
+  
+  # Timeout para aprobación (segundos)
+  timeout: 300  # 5 minutos
+  
+  # Acción si timeout
+  on_timeout: "reject"  # reject o auto_approve (NUNCA auto_approve en prod)
+  
+  # Auto-reject en ciertas condiciones
+  auto_reject_conditions:
+    - "high_volatility"  # Si ATR > threshold
+    - "near_news"        # Si hay evento económico cercano (fase 2)
+    - "market_closed"    # Si mercado cerrado
+
+# -----------------------------------------------
+# NOTIFICATION CHANNELS
+# -----------------------------------------------
+notifications:
+  # Telegram
+  telegram:
+    enabled: true  # true para activar (requiere .env configurado)
+    send_on_signal: true
+    send_on_fill: true
+    send_on_error: true
+    
+    # Formato del mensaje
+    message_format: "detailed"  # detailed o concise
+    
+    # Incluir chart (fase 2)
+    include_chart: false
+  
+  # Discord
+  discord:
+    enabled: false
+    webhook_url_from_env: true
+    send_on_signal: true
+    send_on_fill: true
+    send_on_error: true
+  
+  # Email (fase 2)
+  email:
+    enabled: false
+  
+  # Local (siempre activo para desarrollo)
+  local:
+    enabled: true
+    log_to_file: true
+    log_file: "logs/signals.log"
+
+# -----------------------------------------------
+# SIGNAL PRESENTATION
+# -----------------------------------------------
+signal_presentation:
+  # Información a mostrar en la notificación
+  include:
+    - "symbol"
+    - "direction"  # LONG/SHORT
+    - "confidence"  # Probabilidad del modelo
+    - "position_size"
+    - "entry_price"
+    - "stop_loss"
+    - "take_profit"
+    - "risk_reward_ratio"
+    - "expected_value"
+    - "reason"  # Explicación del modelo
+    - "market_conditions"
+    
+  # Ordenar por
+  sort_by: "expected_value"  # desc
+
+# -----------------------------------------------
+# APPROVAL INTERFACE
+# -----------------------------------------------
+approval_interface:
+  # Método de aprobación
+  method: "telegram_buttons"  # telegram_buttons, cli_prompt, web_dashboard (fase 2)
+  
+  # Opciones disponibles
+  options:
+    - "approve"
+    - "reject"
+    - "modify"  # Ajustar size/levels (fase 2)
+    - "defer"   # Posponer decisión
+  
+  # Default action si no se responde
+  default_action: "reject"
+
+# -----------------------------------------------
+# PAPER TRADING SPECIFIC
+# -----------------------------------------------
+paper_trading:
+  # Simular ejecución
+  simulate_execution: true
+  
+  # Simular slippage
+  simulate_slippage: true
+  slippage_points: 0.5
+  
+  # Simular spread
+  simulate_spread: true
+  spread_points: 2.0
+  
+  # Simular delays
+  simulate_delays: true
+  execution_delay_seconds: 1.0
+  
+  # Simular rechazos
+  simulate_rejections: false
+  rejection_rate: 0.0
+
+# -----------------------------------------------
+# REAL TRADING (FASE 2 - NO USAR EN MVP)
+# ===============================================
+# ⚠️ ADVERTENCIA: NO ACTIVAR SIN VALIDACIÓN COMPLETA
+# ===============================================
+real_trading:
+  enabled: false  # DEBE PERMANECER EN FALSE
+  
+  # Requiere confirmación adicional
+  require_explicit_confirmation: true
+  
+  # Doble check antes de enviar orden
+  double_check: true
+  
+  # Máximo size permitido en real
+  max_position_size_real: 0.01  # lotes
+  
+  # Whitelist de símbolos
+  allowed_symbols: []  # Vacío = ninguno permitido
+
+# -----------------------------------------------
+# LOGGING
+# -----------------------------------------------
+logging:
+  # Log todas las señales
+  log_all_signals: true
+  
+  # Log aprobaciones/rechazos
+  log_approvals: true
+  
+  # Log ejecuciones
+  log_executions: true
+  
+  # Formato
+  log_format: "json"  # json o text
+  
+  # Retention
+  retention_days: 90
