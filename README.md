@@ -1,6 +1,15 @@
 ![Banner](./assets/aurum-edge-banner1.jpeg)
 
-**Motor de decisión ML para trading cuantitativo con validación walk-forward y risk management**
+# 🚀 AURUM-EDGE — ML Decision Engine (Quant Trading)
+### *Motor profesional de decisión ML para Trading Cuantitativo*
+
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![XGBoost](https://img.shields.io/badge/XGBoost-enabled-brightgreen.svg)](https://xgboost.ai/)
+[![Optuna](https://img.shields.io/badge/Optuna-tuning-yellow.svg)](https://optuna.org/)
+[![Validation](https://img.shields.io/badge/validation-walk--forward-purple.svg)]()
+[![Labeling](https://img.shields.io/badge/labeling-triple--barrier-orange.svg)]()
+[![Risk](https://img.shields.io/badge/risk-micro--managed-red.svg)]()
+[![License](https://img.shields.io/badge/license-Proprietary-darkred.svg)]()
 
 ---
 
@@ -464,3 +473,19 @@ No redistribuir sin autorización.
 
 Desarrollado por LIA Engineering Solutions.
 Basado en principios de trading cuantitativo, machine learning y risk management.
+
+## 🔗 Navegación
+
+<p align="center">
+  <a href="https://github.com/miller-petit-dev/Nexus-AI-Financial-Data-Pipeline-Insights">
+    <img src="https://img.shields.io/badge/Ir_a_Nexus-NEXUS_AI-0078D4?style=for-the-badge&logo=databricks&logoColor=white" alt="Ir a Nexus">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/miller-petit-dev/LIA-Quantitative-Execution-Framework">
+    <img src="https://img.shields.io/badge/Ir_a_LIA-LIA_CORE-8A2BE2?style=for-the-badge&logo=quantconnect&logoColor=white" alt="Ir a LIA">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/Miller-Petit-Dev">
+    <img src="https://img.shields.io/badge/Volver_al_Home-Portfolio-333333?style=for-the-badge&logo=github&logoColor=white" alt="Volver al Home">
+  </a>
+</p>
